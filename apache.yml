@@ -18,43 +18,7 @@
         name: apache2
         state: started
         enabled: yes
-
-    - name: Configure Apache to listen on port 80
-      lineinfile:
-        path: /etc/apache2/ports.conf
-        line: "Listen 80"
-        state: present
-        owner: root
-        group: root
-        mode: '0644'
-
-    - name: Create a virtual host configuration file
-      template:
-        src: templates/httpd-vhost.conf.j2
-        dest: /etc/apache2/sites-available/mywebsite.conf
-        owner: root
-        group: root
-        mode: '0644'
-      notify:
-        - Enable the virtual host
-
-    - name: Disable the default virtual host
-      file:
-        path: /etc/apache2/sites-enabled/000-default.conf
-        state: absent
-      notify:
-        - Restart Apache service
-
-  handlers:
-    - name: Enable the virtual host
-      command: a2ensite mywebsite.conf
-      notify:
-        - Restart Apache service
-
-    - name: Restart Apache service
-      service:
-        name: apache2
-        state: restarted
+    
     - name: Deploy static website
       copy:
         src: index.html
